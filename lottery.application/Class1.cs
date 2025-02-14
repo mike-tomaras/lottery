@@ -1,7 +1,6 @@
-﻿namespace lottery.application
-{
-    public class Class1
-    {
+﻿namespace lottery.application;
 
-    }
+public class Class1
+{
+
 }

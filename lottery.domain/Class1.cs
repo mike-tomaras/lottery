@@ -1,7 +1,6 @@
-﻿namespace lottery.domain
-{
-    public class Class1
-    {
+﻿namespace lottery.domain;
 
-    }
+public class Class1
+{
+
 }
