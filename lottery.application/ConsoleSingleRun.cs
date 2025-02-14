@@ -1,6 +1,5 @@
 ﻿
 using lottery.application.Interfaces;
-using lottery.domain.Users;
 
 namespace lottery.application;
 

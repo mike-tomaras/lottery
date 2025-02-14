@@ -1,7 +1,5 @@
 using lottery.domain.Game;
 using lottery.domain.Users;
-using NUnit.Framework;
-using System;
 
 namespace lottery.domain.tests
 {
@@ -26,7 +24,7 @@ namespace lottery.domain.tests
     }
 
     [TestFixture]
-    public class GameEntityTests_WhenBuyingTickets
+    public class GameEntityTests_WhenBuyingTickets_GivenPlayerHasEnoughBalance
     {
         private UserEntity player;
 
@@ -56,6 +54,24 @@ namespace lottery.domain.tests
         public void ShouldUpdatePlayerWalletBalance()
         {
             //TODO: Implement this test`
+        }
+    }
+
+    [TestFixture]
+    public class GameEntityTests_WhenBuyingTickets_GivenPlayerDoesNotHaveEnoughBalance
+    {
+        [Test]
+        public void ShouldBuyOnlyTicketsSheCanAfford()
+        {
+            // Arrange
+            decimal ticketPrice = 1m;
+            var game = new GameEntity(ticketPrice);
+            var player = UserEntity.Factory.GetDefaultUser(1, 5);
+            var noOfTickets = 10;
+            // Act
+            game.BuyTickets(player, noOfTickets);
+
+            //TODO: Implement this test
         }
     }
 }

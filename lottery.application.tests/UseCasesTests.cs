@@ -1,6 +1,5 @@
 using lottery.domain.Game;
 using lottery.domain.Users;
-using NUnit.Framework;
 
 namespace lottery.application.tests
 {

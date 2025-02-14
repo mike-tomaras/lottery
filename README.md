@@ -6,6 +6,9 @@ There are notes specific to this test starting with "TEST NOTE" throughout the s
 
 ## Code architecture notes
 I am using Clean/Onion code architecture as described [here](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). 
+This is the same as Hexagonal architecture but with a different name. The idea is to separate the essential complexity of the domain from the accidental complexity of the presentation, integration and persistence.
+I added another diagram, more specific to this repo.
+![onion](/docs/onion.png)
 
 I only use one project for all domains but separate them as folders so they should be easy to refactor in new projects if they grew too big. 
 Domain classes are responsible for maintaining correct state using private setters and asserting correst state in all ctors and methods. The consumers can't create invalid state.
@@ -19,9 +22,6 @@ is not my preference. I would prefer to use a Result type or similar.
 
 ## Testing notes
 There is full unit test coverage on the essential complexity, i.e. all the code in the Domain project and the use cases in the Application project. 
-
-The "units" in the Domain project are not necessarily one class. A test case can cover multiple components. 
-This is on purpose as by testing the behavior of the Domain and not the internals allows for a lot of refactoring flexibility little no need to change tests. 
 
 The Application project tests does not need to mock the Domain and I do not test functionality inside the Domain, only logic in the Application. 
 The Application layer does need to mock the presentation layer (console atm) and anything else that would exist in the outer circle of the Onion. We can add wider 
