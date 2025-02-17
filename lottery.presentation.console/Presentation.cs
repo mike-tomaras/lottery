@@ -16,9 +16,11 @@ public class Presentation : IPresentation
         Console.WriteLine();
     }
 
-    public void ShowPreDrawGameDetails(int noOfPlayers)
+    public void ShowPreDrawGameDetails(int noOfPlayers, int noOfTickets, decimal pot)
     {
         Console.WriteLine($"{noOfPlayers - 1} other CPU players also have purchased tickets.");
+        Console.WriteLine($"Total tickets: {noOfTickets}");
+        Console.WriteLine($"Pot: ${pot}");
         Console.WriteLine();
     }
 
@@ -38,6 +40,7 @@ public class Presentation : IPresentation
 
     public void ShowGameResults(GameEntity game, DrawResult results)
     {
+        Console.WriteLine("DRAW!!!");
         Console.WriteLine("Ticket draw results:");
         Console.WriteLine();
 

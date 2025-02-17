@@ -8,7 +8,7 @@ The problem statement implies that a player can win more than one prizes, its wi
 
 ## Code architecture notes
 I am using Clean/Onion code architecture as described [here](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). 
-This is the same as Hexagonal architecture but with a different name. The idea is to separate the essential complexity of the domain from the accidental complexity of the presentation, integration and persistence.
+The idea is to separate the essential complexity of the domain from the accidental complexity of the presentation, integration and persistence.
 I added [another diagram](/docs/onion.png), more specific to this repo.
 
 I only use one project for all domains but separate them as folders so they should be easy to refactor in new projects if they grew too big. 

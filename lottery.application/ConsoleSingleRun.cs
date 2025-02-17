@@ -19,7 +19,7 @@ public class ConsoleSingleRun
     {
         //Config
         //TEST NOTE: I would add this to a config file or a database to change it easily without recompiling the code
-        decimal ticketPrice = 1m;
+        decimal ticketPrice = 3m;
         decimal initialWalletBalance = 10m;
         int maxTickets = 10;
         int minTickets = 1;
@@ -49,7 +49,7 @@ public class ConsoleSingleRun
             app.BuyTickets(game, players[i], new Random().Next(minTickets, maxTickets));
         }
 
-        presentation.ShowPreDrawGameDetails(players.Count);
+        presentation.ShowPreDrawGameDetails(players.Count, game.Tickets.Count, game.Pot);
 
         var results = app.DrawWinners(game);
 
