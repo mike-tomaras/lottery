@@ -1,4 +1,4 @@
-﻿namespace lottery.domain.Game;
+﻿namespace lottery.domain.Domains.Game;
 
 public enum PrizeTierEnum
 {

@@ -12,6 +12,8 @@ The idea is to separate the essential complexity of the domain from the accident
 I added [another diagram](/docs/onion.png), more specific to this repo.
 
 As for the Domain project itself I am using some simple DDD principles like Entities and Value Objects. 
+The Domains are separated in folders (Game, Users) but if they grow enough they could be extracted in their own projects. Whether in a folder or a project, 
+the domain, its application use cases and its use in integrations/presentation/persistence should be separate and easy to extract in new repos/services if needed. 
 
 I only use one project for all domains but separate them as folders so they should be easy to refactor in new projects if they grew too big. 
 Domain classes are responsible for maintaining correct state using private setters and checks in all ctors and methods. The consumers can't create invalid state.

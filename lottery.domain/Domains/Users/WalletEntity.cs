@@ -1,4 +1,4 @@
-﻿namespace lottery.domain.Users;
+﻿namespace lottery.domain.Domains.Users;
 
 public class WalletEntity
 {

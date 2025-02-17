@@ -1,5 +1,4 @@
-﻿
-namespace lottery.domain.Game;
+﻿namespace lottery.domain.Domains.Game;
 
 public class TicketEntity
 {
@@ -7,10 +6,11 @@ public class TicketEntity
     public int UserId { get; private set; }
     public Guid GameId { get; private set; }
     private PrizeTierEnum _prize;
-    public PrizeTierEnum Prize 
-    { 
+    public PrizeTierEnum Prize
+    {
         get => _prize;
-        set {
+        set
+        {
             if (_prize == PrizeTierEnum.None)
             {
                 _prize = value;
@@ -19,7 +19,7 @@ public class TicketEntity
             {
                 throw new InvalidOperationException("Ticket has already been drawn and assigned a prize.");
             }
-        } 
+        }
     }
 
     public TicketEntity(int userId, Guid gameId)

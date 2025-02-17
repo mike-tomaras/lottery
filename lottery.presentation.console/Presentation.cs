@@ -1,6 +1,6 @@
 ﻿using lottery.application.Interfaces;
-using lottery.domain.Game;
-using lottery.domain.Users;
+using lottery.domain.Domains.Game;
+using lottery.domain.Domains.Users;
 
 namespace lottery.presentation.console;
 

@@ -1,4 +1,4 @@
-using lottery.domain.Users;
+using lottery.domain.Domains.Users;
 
 namespace lottery.domain.tests;
 
@@ -27,7 +27,7 @@ public class UserEntityTests
         int name = 1;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new UserEntity(name, null));
+        Assert.Throws<ArgumentNullException>(() => new UserEntity(name, new WalletEntity(1, 1)));
     }
 
     [Test]

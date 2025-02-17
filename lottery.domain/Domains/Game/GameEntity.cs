@@ -1,7 +1,7 @@
-﻿using lottery.domain.Interfaces;
-using lottery.domain.Users;
+﻿using lottery.domain.Domains.Users;
+using lottery.domain.Interfaces;
 
-namespace lottery.domain.Game;
+namespace lottery.domain.Domains.Game;
 
 public class GameEntity
 {
@@ -14,7 +14,7 @@ public class GameEntity
     {
         Id = Guid.NewGuid();
         Tickets = new List<TicketEntity>();
-        TicketPrice = ticketPrice;        
+        TicketPrice = ticketPrice;
     }
 
     public void BuyTickets(UserEntity player, int noOfTickets)
@@ -22,7 +22,7 @@ public class GameEntity
         var actualNoOfTickets = Math.Min(noOfTickets, (int)(player.Wallet.Balance / TicketPrice));
 
         player.Wallet.Debit(actualNoOfTickets * TicketPrice);
-        
+
         if (actualNoOfTickets == 0) return;
 
         Enumerable.Range(1, actualNoOfTickets).ToList().ForEach(_ =>

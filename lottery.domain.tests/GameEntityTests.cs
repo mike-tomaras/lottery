@@ -1,6 +1,6 @@
-using lottery.domain.Game;
+using lottery.domain.Domains.Game;
+using lottery.domain.Domains.Users;
 using lottery.domain.Interfaces;
-using lottery.domain.Users;
 using Moq;
 
 namespace lottery.domain.tests;

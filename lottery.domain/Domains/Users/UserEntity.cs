@@ -1,4 +1,4 @@
-﻿namespace lottery.domain.Users;
+﻿namespace lottery.domain.Domains.Users;
 
 public class UserEntity
 {
@@ -21,5 +21,5 @@ public class UserEntity
         {
             return new UserEntity(name, new WalletEntity(name, balance));
         }
-    }    
+    }
 }

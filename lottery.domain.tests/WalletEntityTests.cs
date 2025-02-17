@@ -1,4 +1,4 @@
-using lottery.domain.Users;
+using lottery.domain.Domains.Users;
 
 namespace lottery.application.tests;
 

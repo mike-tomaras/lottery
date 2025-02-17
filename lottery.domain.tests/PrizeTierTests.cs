@@ -1,3 +1,5 @@
+using lottery.domain.Domains.Game;
+
 namespace lottery.domain.Game.Tests
 {
     [TestFixture]
@@ -28,7 +30,7 @@ namespace lottery.domain.Game.Tests
             decimal winningAmount = 100m;
 
             // Act & Assert
-            var ex = Assert.Throws<ArgumentNullException>(() => new PrizeTierValueType(tier, winningAmount, null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new PrizeTierValueType(tier, winningAmount, new List<TicketEntity>()));
             Assert.That(ex.ParamName, Is.EqualTo("winningTickets"));
         }
 
