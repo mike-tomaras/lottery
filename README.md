@@ -39,7 +39,7 @@ repos is configured and communicates correctly, giving expected outputs.
 # Further work
 - Making the lottery do multiple runs maintaining the player and wallet state between runs (the code to make sure a player can only buy as many tickets as they can afford is already there though).
 - When drawing for a very large numbers of tickets and potential winners, the current implementation may not scale well for CPU performance as we perform a full scan of the ticket list for each ticket draw. We could trade more latency with more RAM or external persitence.
-- Making the prize tiers more configurable by extending the PrizeTier with to abstreact away the tier configuration and winners calculations. The Game constructor would take in a list of PrizeTiers and the DrawWinners method would call the PrizeTier onj to calculate the winners.
+- Making the prize tiers more configurable by extending the PrizeTier with to abstreact away the tier configuration and winners calculations. The Game constructor would take in a list of PrizeTiers and the DrawWinners method would call the PrizeTier obj to calculate the winners.
 - More use cases for players to draw and top up their wallets as well as do other account admin.
 - Adding a new presentation layer by adding a new project, referencing the Application proj and implementing the IPresentation interface. 
 - Adding integrations and/or persistence by adding new projects and implementing the relevant interfaces in the Application project. 
