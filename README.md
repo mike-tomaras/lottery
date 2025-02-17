@@ -31,9 +31,11 @@ in the Application project if they had any logic in them.
 
 If there were Application project tests they would do not need to mock the Domain, simplifying the tests a bit. We would not re test functionality 
 inside the Domain, only logic in the Application. 
-The Application layer would need to mock the presentation layer (console atm) and anything else that would exist in the outer circle of the Onion. We can add wider 
-scope integration tests (covering functionality nad config in and out of this specific repo) to make sure the repo layers or code across 
-repos is configured and communicates correctly, giving expected outputs.
+The Application layer would need to mock the presentation layer (console atm) and anything else that would exist in the outer circle of the Onion. 
+
+We can add wider scope integration tests (covering functionality nad config in and out of this specific repo) to make sure the repo layers or code across 
+repos is configured and communicates correctly, giving expected outputs. More test types, the definitions of their names, theit standards, their proportions, 
+their coverage and when they run in the CI (always optimizing for fast feedback) would ideally be part of a common test strategy. 
 
 
 # Further work
