@@ -1,5 +1,6 @@
 ﻿
 using lottery.application.Interfaces;
+using lottery.domain.Interfaces;
 
 namespace lottery.application;
 
@@ -28,23 +29,29 @@ public class ConsoleSingleRun
 
         //TEST NOTE: we will only do one run of the lottery game
         //if we were to run multiple times, we would need to return and reuse the players and wallets state
-        //and make sure we handle the case where the user runs out of money
-        //This case is handled in the domain logic, but we would need to add some logic to handle it here too
+        //and make sure we handle the case where a user runs out of money
+        //This case is already handled in the domain logic,
+        //but we would need to make sure we have enough players with enough money
+        //to keep the game going
         var game = app.InitializeGame(ticketPrice);
-        var players = Enumerable.Range(10, 15)
+        var players = Enumerable.Range(1, new Random().Next(10, 15))
                     .Select(name => app.InitializePlayer(name, initialWalletBalance))
                     .ToList();
 
-        presentation.ShowGameDetails(players[0], ticketPrice);
+        presentation.ShowInitialGameDetails(players[0], ticketPrice);
 
         //first player is the actual user
         var noOfTickets = presentation.GetUserTicketInput(players[0].Name, minTickets, maxTickets);
-        game.BuyTickets(players[0], noOfTickets);
+        app.BuyTickets(game, players[0], noOfTickets);
 
         //rest of the players are bots
         for (int i = 1; i < players.Count; i++)
         {
-            game.BuyTickets(players[i], new Random().Next(minTickets, maxTickets));
+            app.BuyTickets(game, players[i], new Random().Next(minTickets, maxTickets));
         }
+
+        presentation.ShowPreDrawGameDetails(players.Count);
+
+        app.DrawWinners(game);
     }
 }

@@ -23,17 +23,18 @@ is not my preference. I would prefer to use a Result type or similar.
 ## Testing notes
 There is full unit test coverage on the essential complexity, i.e. all the code in the Domain project and the use cases in the Application project. 
 
-The Application project tests does not need to mock the Domain and I do not test functionality inside the Domain, only logic in the Application. 
+The Application project tests do not need to mock the Domain and I do not test functionality inside the Domain, only logic in the Application. 
 The Application layer does need to mock the presentation layer (console atm) and anything else that would exist in the outer circle of the Onion. We can add wider 
-scope integration tests (scope in and out of th is specific repo) to make sure the Onion layers communicate correctly and 
+scope integration tests (scope in and out of this specific repo) to make sure the Onion layers communicate correctly and 
 the outputs of the presentation/integration/persistence are what we expect.
 
 
 # Further work
-- Making the lottery do multiple runs maintaining the player and wallet state between runs. (the code to make sure a player can only buy as many tickets as they can afford is there but will not get hit with the initial parameters. Change the )
+- Making the lottery do multiple runs maintaining the player and wallet state between runs. (the code to make sure a player can only buy as many tickets as they can afford is there).
+- Making the prize tiers more configurable by adding a PrizeTier class. The Game constructor would take in a list of PrizeTiers and the DrawWinners method would be able to calculate the winners based on any configuration of no of winners and % of pot.
 - Adding a new presentation layer by adding a new project, referencing the Application proj and implementing the IPresentation interface. 
 - Adding integrations and/or persistence by adding new projects and implementing the relevant interfaces in the Application project. 
 - Dockerizing (not needed for a console presentation layer).
 - Deploy yaml and config transformation files per deployment environment.
 - If it was deployable, I would add infra-as-code to the same repo.
-- If there was persistence, I would add the migrations-as-code or schema-as-code to the same repo.
+- If there was persistence, I would add the migrations-as-code or schema-as-code in the same repo.
