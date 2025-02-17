@@ -22,8 +22,8 @@ public class UseCases
         game.BuyTickets(user, noOfTickets);
     }
 
-    public void DrawWinners(GameEntity game)
+    public DrawResult DrawWinners(GameEntity game)
     {
-        game.DrawWinners(new NativeRandomGen());
+        return game.DrawWinners(new NativeRandomGen());
     }
 }

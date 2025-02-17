@@ -1,10 +1,13 @@
 ﻿using lottery.application.Interfaces;
+using lottery.domain.Game;
 using lottery.domain.Users;
 
 namespace lottery.presentation.console;
 
 public class Presentation : IPresentation
 {
+    //TEST NOTE: we could unit test the string outputs if we abstracted them into another class
+    //that provided the strings only. Skipping now
     public void ShowInitialGameDetails(UserEntity player, decimal ticketPrice)
     {
         Console.WriteLine($"Welcome to the Lottery, Player {player.Name}!\n" +
@@ -33,5 +36,31 @@ public class Presentation : IPresentation
         return tickets;
     }
 
-    
+    public void ShowGameResults(GameEntity game, DrawResult results)
+    {
+        Console.WriteLine("Ticket draw results:");
+        Console.WriteLine();
+
+        var firstPrize = results.Prizes.First(p => p.Tier == PrizeTierEnum.First);
+        var firstPrizeWinner = firstPrize.WinningTickets.First().UserId;
+        Console.WriteLine($"* Grand prize: Player {firstPrizeWinner} wins ${firstPrize.WinningAmount}!");
+
+        var secondPrize = results.Prizes.First(p => p.Tier == PrizeTierEnum.Second);
+        var secondPrizeWinners = secondPrize.WinningTickets.GroupBy(w => w.UserId);
+        Console.WriteLine($"* Second Tier: Each ticket wins ${secondPrize.WinningAmount}!");
+        foreach (var winner in secondPrizeWinners)
+        {
+            Console.WriteLine($"*  Player {winner.Key} wins ${secondPrize.WinningAmount * winner.Count()}!");
+        }
+        
+        var thirdPrize = results.Prizes.First(p => p.Tier == PrizeTierEnum.Third);
+        var thirdPrizeWinners = thirdPrize.WinningTickets.GroupBy(w => w.UserId);
+        Console.WriteLine($"* Second Tier: Each ticket wins ${thirdPrize.WinningAmount}!");
+        foreach (var winner in secondPrizeWinners)
+        {
+            Console.WriteLine($"*  Player {winner.Key} wins ${thirdPrize.WinningAmount * winner.Count()}!");
+        }
+
+        Console.WriteLine($"House revenue: ${results.HouseProfit}");
+    }
 }

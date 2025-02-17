@@ -8,13 +8,13 @@ public enum PrizeTierEnum
     Third = 3
 }
 
-public class  PrizeTier
+public record class PrizeTierValueType
 {
-    public PrizeTierEnum Tier { get; private set; }
-    public decimal WinningAmount { get; private set; }
-    public List<Ticket> WinningTickets { get; private set; }
+    public PrizeTierEnum Tier { get; }
+    public decimal WinningAmount { get; }
+    public List<TicketEntity> WinningTickets { get; }
 
-    public PrizeTier(PrizeTierEnum tier, decimal winningAmount, List<Ticket> winningTickets)
+    public PrizeTierValueType(PrizeTierEnum tier, decimal winningAmount, List<TicketEntity> winningTickets)
     {
         if (winningTickets == null) throw new ArgumentNullException(nameof(winningTickets));
         if (winningTickets.Count == 0) throw new ArgumentException("The Prize must have at least one ticket", nameof(winningTickets));

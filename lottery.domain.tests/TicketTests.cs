@@ -1,6 +1,4 @@
 using lottery.domain.Game;
-using NUnit.Framework;
-using System;
 
 namespace lottery.domain.tests;
 
@@ -15,7 +13,7 @@ public class WhenCreatingATicket
         Guid gameId = Guid.NewGuid();
 
         // Act
-        var ticket = new Ticket(userId, gameId);
+        var ticket = new TicketEntity(userId, gameId);
 
         // Assert
         Assert.That(ticket.Id, Is.Not.EqualTo(Guid.Empty));
@@ -32,7 +30,7 @@ public class WhenCreatingATicket
         Guid emptyGameId = Guid.Empty;
 
         // Act & Assert
-        var ex = Assert.Throws<ArgumentException>(() => new Ticket(userId, emptyGameId));
+        var ex = Assert.Throws<ArgumentException>(() => new TicketEntity(userId, emptyGameId));
         Assert.That(ex.ParamName, Is.EqualTo("gameId"));
     }
 }
@@ -44,7 +42,7 @@ public class WhenSettingThePrizeOfATicket
     public void GivenCurrentPrizeIsNone_ShouldBeSettable()
     {
         // Arrange
-        var ticket = new Ticket(1, Guid.NewGuid());
+        var ticket = new TicketEntity(1, Guid.NewGuid());
 
         // Act
         ticket.Prize = PrizeTierEnum.First;
@@ -54,17 +52,14 @@ public class WhenSettingThePrizeOfATicket
     }
 
     [Test]
-    public void GivenPrizeIsAlreadySet_ShouldNotBeAbleToChangeIt()
+    public void GivenPrizeIsAlreadySet_ShouldThrowAnException()
     {
         // Arrange
-        var ticket = new Ticket(1, Guid.NewGuid());
+        var ticket = new TicketEntity(1, Guid.NewGuid());
         ticket.Prize = PrizeTierEnum.First;
 
-        // Act
-        ticket.Prize = PrizeTierEnum.Second;
-
-        // Assert
-        Assert.That(ticket.Prize, Is.EqualTo(PrizeTierEnum.First));
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(() => ticket.Prize = PrizeTierEnum.Second);
     }
 }
 

@@ -2,7 +2,6 @@
 
 public class WalletEntity
 {
-    //TEST NOTE: Entities in DDD have Ids but we will skip the Id uniqueness checks for simplicity
     public int Id { get; private set; }
     public decimal Balance { get; private set; }
     //TEST NOTE: We will assume only USD for simplicity, if the currency was configurable
@@ -10,6 +9,7 @@ public class WalletEntity
 
     public WalletEntity(int id, decimal balance)
     {
+        //TEST NOTE: Entities in DDD have unique Ids but we will skip the Id uniqueness checks for simplicity
         if (balance < 0) throw new ArgumentOutOfRangeException(nameof(balance), "Balance cannot be negative");
 
         Id = id;

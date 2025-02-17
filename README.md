@@ -4,11 +4,12 @@ This is a slighlty overengineered solution as I am trying to demonstrate long te
 
 There are notes specific to this test starting with "TEST NOTE" throughout the solution.
 
+The problem statement implies that a player can win more than one prizes, its winning __tickets__ that are excluded from further prize tiers. I am going with that assumption.
+
 ## Code architecture notes
 I am using Clean/Onion code architecture as described [here](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). 
 This is the same as Hexagonal architecture but with a different name. The idea is to separate the essential complexity of the domain from the accidental complexity of the presentation, integration and persistence.
-I added another diagram, more specific to this repo.
-![onion](/docs/onion.png)
+I added [another diagram](/docs/onion.png), more specific to this repo.
 
 I only use one project for all domains but separate them as folders so they should be easy to refactor in new projects if they grew too big. 
 Domain classes are responsible for maintaining correct state using private setters and asserting correst state in all ctors and methods. The consumers can't create invalid state.
@@ -31,7 +32,9 @@ the outputs of the presentation/integration/persistence are what we expect.
 
 # Further work
 - Making the lottery do multiple runs maintaining the player and wallet state between runs. (the code to make sure a player can only buy as many tickets as they can afford is there).
+- When drawing for a very large numbers of tickets and potential winners, the current implementation may not scale well for performance as we perform a full scan of the ticket list for each ticket draw. We could trade more memory or add accitental complexity with persistence and the latency involved to get less computation latency.
 - Making the prize tiers more configurable by adding a PrizeTier class. The Game constructor would take in a list of PrizeTiers and the DrawWinners method would be able to calculate the winners based on any configuration of no of winners and % of pot.
+- Mmore use cases for players to draw and top up their wallets as well as do other account admin.
 - Adding a new presentation layer by adding a new project, referencing the Application proj and implementing the IPresentation interface. 
 - Adding integrations and/or persistence by adding new projects and implementing the relevant interfaces in the Application project. 
 - Dockerizing (not needed for a console presentation layer).

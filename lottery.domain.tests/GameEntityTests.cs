@@ -1,4 +1,3 @@
-using lottery.application;
 using lottery.domain.Game;
 using lottery.domain.Interfaces;
 using lottery.domain.Users;
@@ -115,6 +114,10 @@ public class WhenRunningTheLottery_GivenASuccessfulRun
     public void Setup()
     {
         // Arrange
+        game = new GameEntity(ticketPrice: 5m);
+        var players = Enumerable.Range(1, 10)
+                .Select(name => UserEntity.Factory.GetDefaultUser(name, balance: 100))
+                .ToList();
         var randomGen = new Mock<IRandomGenerator>();
         randomGen.SetupSequence(x => x.GetRandomInt(It.IsAny<int>(), It.IsAny<int>()))
             //1st tier goes to player 10, last ticket of 10
@@ -127,15 +130,13 @@ public class WhenRunningTheLottery_GivenASuccessfulRun
             .Returns(6).Returns(7).Returns(8).Returns(9).Returns(10)
             .Returns(11).Returns(12).Returns(13).Returns(14).Returns(15)
             .Returns(16).Returns(17).Returns(18).Returns(19).Returns(20);
-        game = new GameEntity(5m);
-        var players = Enumerable.Range(1, 10)
-                .Select(name => UserEntity.Factory.GetDefaultUser(name, balance: 100))
-                .ToList();
 
         foreach (var player in players)
             game.BuyTickets(player, 10);
 
-        //10 players, 10 tickets each, 100 tickets total, $500 pot
+        //$5 per ticket, 10 players, 10 tickets each, 100 tickets total, $500 pot
+        //Should get 1 winner for 1st tier, 10 winners for 2nd tier, 20 winners for 3rd tier
+        //Should get $250 for 1st tier, $15 per winning ticket for 2nd tier, $2.5 per winning ticket for 3rd tier
 
         // Act
         result = game.DrawWinners(randomGen.Object);
@@ -150,6 +151,7 @@ public class WhenRunningTheLottery_GivenASuccessfulRun
         Assert.That(game.Tickets.Count(t => t.Prize == PrizeTierEnum.First), Is.EqualTo(1));
         Assert.That(firstPrize.WinningTickets.Count, Is.EqualTo(1));
         Assert.That(firstPrize.WinningAmount, Is.EqualTo(250m));
+        Assert.That(firstPrize.Tier, Is.EqualTo(PrizeTierEnum.First));
 
         var winningTicket = firstPrize.WinningTickets.SingleOrDefault();
         Assert.That(winningTicket, Is.Not.Null);
@@ -165,6 +167,8 @@ public class WhenRunningTheLottery_GivenASuccessfulRun
         Assert.That(game.Tickets.Count(t => t.Prize == PrizeTierEnum.Second), Is.EqualTo(10));//10% of all tickets
         Assert.That(secondPrize.WinningTickets.Count, Is.EqualTo(10));
         Assert.That(secondPrize.WinningAmount, Is.EqualTo(15m));
+        Assert.That(secondPrize.WinningTickets.All(t => t.Prize == PrizeTierEnum.Second), Is.True);
+        Assert.That(secondPrize.Tier, Is.EqualTo(PrizeTierEnum.Second));
     }
     [Test]
     public void ShouldDrawTheThirdTierWinners()
@@ -174,13 +178,58 @@ public class WhenRunningTheLottery_GivenASuccessfulRun
 
         Assert.That(game.Tickets.Count(t => t.Prize == PrizeTierEnum.Third), Is.EqualTo(20));//20% of all tickets
         Assert.That(thirdPrize.WinningTickets.Count, Is.EqualTo(20));
-        Assert.That(thirdPrize.WinningAmount, Is.EqualTo(5m));        
+        Assert.That(thirdPrize.WinningAmount, Is.EqualTo(2.5m));
+        Assert.That(thirdPrize.WinningTickets.All(t => t.Prize == PrizeTierEnum.Third), Is.True);
+        Assert.That(thirdPrize.Tier, Is.EqualTo(PrizeTierEnum.Third));
     }
     [Test]
     public void ShouldGetTheHouseProfit()
     {
         // Assert
-        Assert.That(result.HouseProfit, Is.EqualTo(100m));
+        Assert.That(result.HouseProfit, Is.EqualTo(50m));
+    }
+}
+
+[TestFixture]
+public class WhenRunningTheLottery_GivenAPotThatIsNotExactlyDivisibleByTheTierWinners
+{
+    private GameEntity game;
+    private DrawResult result;
+
+    [SetUp]
+    public void Setup()
+    {
+        // Arrange
+        var randomGen = new Mock<IRandomGenerator>();
+        randomGen.Setup(r => r.GetRandomInt(It.IsAny<int>(), It.IsAny<int>())).Returns(1);
+        game = new GameEntity(ticketPrice: 3.33m);
+        var players = Enumerable.Range(1, 333)
+                .Select(name => UserEntity.Factory.GetDefaultUser(name, balance: 100))
+                .ToList();
+
+        foreach (var player in players)
+            game.BuyTickets(player, 1);
+
+        //$3.33 per ticket, 100 players, 1 ticket each, 100 tickets total, $333 pot
+        //Should get 1 winner for 1st tier, 10 winners for 2nd tier, 20 winners for 3rd tier
+        //Should get $50 for 1st tier, $0.909090... for 2nd tier, $0.151515... for 3rd tier
+
+        // Act
+        result = game.DrawWinners(randomGen.Object);
+    }
+
+    [Test]
+    public void ShouldRoundToTheClosestCentAndPutTheRemainderInTheHouseWinnings()
+    {
+        // Assert
+        var firstPrize = result.Prizes.Single(p => p.Tier == PrizeTierEnum.First);
+        var secondPrize = result.Prizes.Single(p => p.Tier == PrizeTierEnum.Second);
+        var thirdPrize = result.Prizes.Single(p => p.Tier == PrizeTierEnum.Third);
+
+        Assert.That(firstPrize.WinningAmount, Is.EqualTo(554m));
+        Assert.That(secondPrize.WinningAmount, Is.EqualTo(10.08m));
+        Assert.That(thirdPrize.WinningAmount, Is.EqualTo(1.66m));
+        Assert.That(result.HouseProfit, Is.EqualTo(111.03m));
     }
 }
 

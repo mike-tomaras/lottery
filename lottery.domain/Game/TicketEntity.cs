@@ -1,7 +1,7 @@
 ﻿
 namespace lottery.domain.Game;
 
-public class Ticket
+public class TicketEntity
 {
     public Guid Id { get; private set; }
     public int UserId { get; private set; }
@@ -15,10 +15,14 @@ public class Ticket
             {
                 _prize = value;
             }
+            else
+            {
+                throw new InvalidOperationException("Ticket has already been drawn and assigned a prize.");
+            }
         } 
     }
 
-    public Ticket(int userId, Guid gameId)
+    public TicketEntity(int userId, Guid gameId)
     {
         if (gameId == Guid.Empty) throw new ArgumentException("GameId cannot be an empty GUID.", nameof(gameId));
 

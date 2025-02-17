@@ -6,15 +6,14 @@ namespace lottery.domain.Game;
 public class GameEntity
 {
     public Guid Id { get; private set; }
-    public decimal Pot { get; private set; }
-    public List<Ticket> Tickets { get; private set; }
+    public decimal Pot => Tickets.Count * TicketPrice;
+    public List<TicketEntity> Tickets { get; private set; }
     public decimal TicketPrice { get; private set; }
 
     public GameEntity(decimal ticketPrice)
     {
         Id = Guid.NewGuid();
-        Pot = 0;
-        Tickets = new List<Ticket>();
+        Tickets = new List<TicketEntity>();
         TicketPrice = ticketPrice;        
     }
 
@@ -27,19 +26,17 @@ public class GameEntity
         if (actualNoOfTickets == 0) return;
 
         Enumerable.Range(1, actualNoOfTickets).ToList().ForEach(_ =>
-            Tickets.Add(new Ticket(player.Name, Id))
+            Tickets.Add(new TicketEntity(player.Name, Id))
         );
-        
-        Pot += noOfTickets * TicketPrice;
     }
 
     public DrawResult DrawWinners(IRandomGenerator randomGen)
     {
-        var prizes = new List<PrizeTier>
+        var prizes = new List<PrizeTierValueType>
         {
             DrawFirstPrize(randomGen),
-            //DrawSecondPrize(randomGen),
-            //DrawThirdPrize(randomGen)
+            DrawSecondPrize(randomGen),
+            DrawThirdPrize(randomGen)
         };
 
         var houseProfit = Pot - prizes.Sum(p => p.WinningTickets.Count * p.WinningAmount);
@@ -47,39 +44,51 @@ public class GameEntity
         return new DrawResult(prizes, houseProfit);
     }
 
-    private PrizeTier DrawFirstPrize(IRandomGenerator randomGen)
+    private PrizeTierValueType DrawFirstPrize(IRandomGenerator randomGen)
+    {
+        var amountPerWinningTicket = Math.Round(Pot * 0.5m);
+
+        TicketEntity winningTicket = DrawTicket(randomGen, PrizeTierEnum.First);
+
+        return new PrizeTierValueType(PrizeTierEnum.First, amountPerWinningTicket, new List<TicketEntity> { winningTicket });
+    }
+
+    private PrizeTierValueType DrawSecondPrize(IRandomGenerator randomGen)
+    {
+        var noOfWinningTickets = (int)Math.Round(Tickets.Count * 0.1, digits: 0);
+        var amountPerWinningTicket = Math.Round(Pot * 0.3m / noOfWinningTickets, decimals: 2);
+
+        var winningTickets = new List<TicketEntity>();
+        for (int i = 0; i < noOfWinningTickets; i++)
+        {
+            winningTickets.Add(DrawTicket(randomGen, PrizeTierEnum.Second));
+        }
+
+        return new PrizeTierValueType(PrizeTierEnum.Second, amountPerWinningTicket, winningTickets);
+    }
+
+    private PrizeTierValueType DrawThirdPrize(IRandomGenerator randomGen)
+    {
+        var noOfWinningTickets = (int)Math.Round(Tickets.Count * 0.2, digits: 0);
+        var amountPerWinningTicket = Math.Round(Pot * 0.1m / noOfWinningTickets, decimals: 2);
+
+        var winningTickets = new List<TicketEntity>();
+        for (int i = 0; i < noOfWinningTickets; i++)
+        {
+            winningTickets.Add(DrawTicket(randomGen, PrizeTierEnum.Third));
+        }
+
+        return new PrizeTierValueType(PrizeTierEnum.Third, amountPerWinningTicket, winningTickets);
+    }
+
+    private TicketEntity DrawTicket(IRandomGenerator randomGen, PrizeTierEnum prizeTier)
     {
         var ticketsInPlay = Tickets.Where(t => t.Prize == PrizeTierEnum.None).ToList();
         var winningTicketIndex = randomGen.GetRandomInt(1, ticketsInPlay.Count) - 1;
-        var amountPerWinningTicket = Math.Round(Pot * 0.5m);
-
         var winningTicket = ticketsInPlay[winningTicketIndex];
-        winningTicket.Prize = PrizeTierEnum.First;
-
-        return new PrizeTier(PrizeTierEnum.First, amountPerWinningTicket, new List<Ticket> { winningTicket });
-    }
-
-    private PrizeTier DrawSecondPrize(IRandomGenerator randomGen)
-    {
-        var ticketsInPlay = Tickets.Where(t => t.Prize == PrizeTierEnum.None).ToList();
-        
-        var noOfWinningTickets = (int)Math.Round(Tickets.Count * 0.1);
-        var amountPerWinningTicket = Pot * 0.3m / noOfWinningTickets;
-
-
-        return new PrizeTier(PrizeTierEnum.Second, amountPerWinningTicket, new List<Ticket> {});
-    }
-
-    private PrizeTier DrawThirdPrize(IRandomGenerator randomGen)
-    {
-        var ticketsInPlay = Tickets.Where(t => t.Prize == PrizeTierEnum.None).ToList();
-        
-        var noOfWinningTickets = (int)Math.Round(Tickets.Count * 0.2);
-        var amountPerWinningTicket = Pot * 0.1m / noOfWinningTickets;
-
-
-        return new PrizeTier(PrizeTierEnum.Third, amountPerWinningTicket, new List<Ticket> { });
+        winningTicket.Prize = prizeTier;
+        return winningTicket;
     }
 }
 
-public record DrawResult(List<PrizeTier> Prizes, decimal HouseProfit);
+public record DrawResult(List<PrizeTierValueType> Prizes, decimal HouseProfit);

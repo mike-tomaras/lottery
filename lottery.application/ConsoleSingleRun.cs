@@ -1,6 +1,5 @@
 ﻿
 using lottery.application.Interfaces;
-using lottery.domain.Interfaces;
 
 namespace lottery.application;
 
@@ -13,7 +12,7 @@ public class ConsoleSingleRun
         this.presentation = presentation;
     }
 
-    //TEST NOTE: this file exists to allow a console app run
+    //TEST NOTE: this file exists to allow a single console app run
     //it is not part of the presentation logic, it just happens to be in the 
     //same project. All logic goes through the UseCases class which is presentation layer agnostic    
     public void Run()
@@ -52,6 +51,8 @@ public class ConsoleSingleRun
 
         presentation.ShowPreDrawGameDetails(players.Count);
 
-        app.DrawWinners(game);
+        var results = app.DrawWinners(game);
+
+        presentation.ShowGameResults(game, results);
     }
 }
