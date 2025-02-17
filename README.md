@@ -2,7 +2,7 @@
 
 This is a slighlty overengineered solution as I am trying to demonstrate long term thinking about code maintainability and easy extensibility/refactoring. 
 
-There are notes specific to this test starting with "TEST NOTE" throughout the solution.
+There are notes specific to this test starting with "TEST NOTE" throughout the solution. The entry point is [here](/lottery.presentation.console/Program.cs) and the lottery run is [here](/lottery.application/ConsoleSingleRun.cs).
 
 The problem statement implies that a player can win more than one prizes, its winning __tickets__ that are excluded from further prize tiers. I am going with that assumption.
 
